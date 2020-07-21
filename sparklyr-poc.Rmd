@@ -1,0 +1,29 @@
+---
+title: "sparklyr poc"
+output: html_notebook
+---
+
+```{r setup}
+library(sparklyr)
+library(tidyverse)
+```
+
+```{r}
+sc <- spark_connect(method = "qubole")
+```
+
+```{r}
+iris_tb <- copy_to(sc, iris)
+```
+
+```{r}
+iris_tb %>% 
+  group_by(Species) %>% 
+  mutate(mean_petal_length = mean(Petal_Length, na.rm = TRUE))
+```
+
+## Notes
+* The default packages result in errors due to an outdated version of `rlang` being referenced somewhere
+* Once I added `tidyverse` and `dbplyr` to the Environment, the errors went away
+  * ^ This may not actually be the case - haven't been able to successfully re-produce it
+
